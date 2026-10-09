@@ -1,41 +1,42 @@
-import { useColorScheme } from 'react-native';
-
-// צבעים מתוך הסקיצה (prototype/daycare-first-sketch.html)
-const light = {
-  ground: '#f3f7f4',
+// העיצוב הנבחר: פס היום + תמונת גיבור + צבע קבוע לכל סוג אירוע (ראו docs/DESIGN.he.md)
+export const theme = {
+  ground: '#e6edff',
   surface: '#ffffff',
-  soft: '#e5f1eb',
-  line: '#dce6df',
-  ink: '#253c3b',
-  muted: '#5d7370',
-  accent: '#276a53',
+  soft: '#dbe5ff',
+  line: '#d6dff5',
+  ink: '#0f2147',
+  muted: '#5a6c93',
+  accent: '#2f5bea',
   onAccent: '#ffffff',
-  warn: '#b4561b',
-  warnSoft: '#fbeadc',
-  danger: '#b3261e',
-  dangerSoft: '#fbe3e1',
-};
+  warn: '#6b4300',
+  warnSoft: '#ffe8b8',
+  danger: '#8f1d12',
+  dangerSoft: '#ffd9d4',
 
-const dark: typeof light = {
-  ground: '#14201f',
-  surface: '#1c2928',
-  soft: '#2d4940',
-  line: '#3e5550',
-  ink: '#edf5f2',
-  muted: '#9db5b0',
-  accent: '#a3d5bc',
-  onAccent: '#14201f',
-  warn: '#f0b27a',
-  warnSoft: '#3d2c1c',
-  danger: '#f2b8b5',
-  dangerSoft: '#42201e',
-};
+  cobalt: '#2f5bea',
+  sun: '#ffc933',
+  sunInk: '#4a3300',
+  coral: '#ff5d4a',
+  mint: '#2fc58b',
+  now: '#e8404f',
 
-export type Theme = typeof light;
+  // צבע לכל סוג אירוע, חוזר בכל המסכים
+  kind: { arrival: '#2f5bea', meal: '#f2a20c', sleep: '#4a42c7', care: '#0f9d8a' },
+  kindTint: { meal: '#fff3da', sleep: '#e9e7ff', care: '#d9f5ef', presence: '#edf1fb' },
+  future: '#d9e1f6',
+} as const;
 
-export function useTheme(): Theme {
-  return useColorScheme() === 'dark' ? dark : light;
-}
+export type Theme = typeof theme;
+export const useTheme = (): Theme => theme;
 
-export const radius = { card: 16, chip: 999 };
+export const tones = {
+  ok: { bg: '#d3f5e5', fg: '#0a6a43' },
+  warn: { bg: '#ffe8b8', fg: '#6b4300' },
+  bad: { bg: '#ffd9d4', fg: '#8f1d12' },
+  cool: { bg: '#dbe5ff', fg: '#1c3aa8' },
+  mute: { bg: '#e8ecf5', fg: '#4d5b7c' },
+} as const;
+export type Tone = keyof typeof tones;
+
+export const radius = { card: 18, chip: 999 };
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 };

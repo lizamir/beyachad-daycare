@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text } from 'react-native';
+import { Txt } from '../src/components/Txt';
 import { ErrorText, Field } from '../src/components/form';
 import { Card, Chip, Screen } from '../src/components/ui';
 import { useSession } from '../src/session';
@@ -29,9 +29,9 @@ export default function Setup() {
   return (
     <Screen title="הקמת משפחתון" subtitle="החשבון שלך עדיין לא משויך למסגרת">
       <Card>
-        <Text style={{ color: t.muted, fontSize: 15, textAlign: 'right' }}>
+        <Txt size={15} color={t.muted}>
           אם את מנהלת משפחתון, אפשר להקים אותו כאן. צוות והורים יצטרפו בהזמנה מהמנהלת.
-        </Text>
+        </Txt>
         <Field label="שם המשפחתון" value={name} onChangeText={setName} />
         <Field label="השם שלך" value={me} onChangeText={setMe} />
         <ErrorText>{error}</ErrorText>

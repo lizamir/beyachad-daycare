@@ -1,9 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { Pressable, Text } from 'react-native';
+import type { ReactNode } from 'react';
 import { useSession } from '../session';
 import { useTheme } from '../theme';
-import { Card, Chip, Screen } from './ui';
+import { Chip, Screen } from './ui';
 
 type Icon = keyof typeof Ionicons.glyphMap;
 export type TabDef = { name: string; title: string; icon: Icon };
@@ -17,7 +17,7 @@ export function RoleTabs({ tabs }: { tabs: TabDef[] }) {
         tabBarActiveTintColor: t.accent,
         tabBarInactiveTintColor: t.muted,
         tabBarStyle: { backgroundColor: t.surface, borderTopColor: t.line },
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+        tabBarLabelStyle: { fontSize: 11, fontFamily: 'Rubik_600SemiBold' },
       }}
     >
       {tabs.map((d) => (
@@ -34,18 +34,11 @@ export function RoleTabs({ tabs }: { tabs: TabDef[] }) {
   );
 }
 
-export function MoreScreen({ items }: { items: string[] }) {
-  const t = useTheme();
+export function MoreScreen({ children }: { children?: ReactNode }) {
   const { signOut } = useSession();
   return (
     <Screen title="עוד">
-      <Card>
-        {items.map((label) => (
-          <Pressable key={label} accessibilityRole="button" style={{ minHeight: 44, justifyContent: 'center' }}>
-            <Text style={{ color: t.ink, fontSize: 17, textAlign: 'right' }}>{label}</Text>
-          </Pressable>
-        ))}
-      </Card>
+      {children}
       <Chip label="התנתקות" tone="warn" onPress={signOut} />
     </Screen>
   );

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text } from 'react-native';
+import { Txt } from '../src/components/Txt';
 import { ErrorText, Field } from '../src/components/form';
 import { Card, Chip, Screen } from '../src/components/ui';
 import { useSession, type Role } from '../src/session';
@@ -24,9 +24,9 @@ export default function Welcome() {
     return (
       <Screen title="ביחד" subtitle="ניהול משפחתון, הורים וצוות">
         <Card>
-          <Text style={{ color: t.ink, fontSize: 16, textAlign: 'right' }}>
+          <Txt size={16}>
             מצב הדגמה: השרת עדיין לא מחובר (חסרות הגדרות Supabase). בחרו תפקיד כדי לראות את המסכים.
-          </Text>
+          </Txt>
         </Card>
         {demoRoles.map(({ role, label }) => (
           <Chip key={role} label={label} onPress={() => signInDemo(role)} />

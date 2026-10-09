@@ -1,53 +1,112 @@
-import { Text, View } from 'react-native';
-import { Card, Chip, Screen, SectionTitle } from '../../src/components/ui';
-import { adminDay } from '../../src/data/demo';
-import { useTheme } from '../../src/theme';
+import { View } from 'react-native';
+import { Txt } from '../../src/components/Txt';
+import { Badge, Card, CardTitle, Disc, Screen } from '../../src/components/ui';
+import { adminDay as d } from '../../src/data/demo';
+import { theme } from '../../src/theme';
 
-function Stat({ label, value }: { label: string; value: string }) {
-  const t = useTheme();
+const AVATAR = { g: '#9be8c4', y: '#ffd978', x: '#dfe4f0' } as const;
+
+function Tile({ bg, fg, label, value, unit, foot }: { bg: string; fg: string; label: string; value: string; unit?: string; foot?: string }) {
   return (
-    <Card style={{ flex: 1, minWidth: 140 }}>
-      <Text style={{ color: t.muted, fontSize: 14, textAlign: 'right' }}>{label}</Text>
-      <Text style={{ color: t.ink, fontSize: 24, fontWeight: '700', textAlign: 'right' }}>{value}</Text>
-    </Card>
+    <View style={{ flex: 1, minHeight: 104, borderRadius: 18, padding: 12, backgroundColor: bg, justifyContent: 'space-between' }}>
+      <Txt w={600} size={12} color={fg}>{label}</Txt>
+      <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
+        <Txt w={700} size={34} color={fg} style={{ lineHeight: 38 }}>{value}</Txt>
+        {unit ? <Txt w={600} size={13} color={fg}>{unit}</Txt> : null}
+      </View>
+      {foot ? <Txt size={11.5} color={fg}>{foot}</Txt> : <View />}
+    </View>
+  );
+}
+
+function Pay({ n, label, sum, bg, fg }: { n: number; label: string; sum: string; bg: string; fg: string }) {
+  return (
+    <View style={{ flex: 1, backgroundColor: bg, borderRadius: 12, padding: 10 }}>
+      <Txt w={700} size={19} color={fg}>{n}</Txt>
+      <Txt w={600} size={12} color={fg}>{label}</Txt>
+      <Txt size={11.5} color={fg}>{sum}</Txt>
+    </View>
   );
 }
 
 export default function AdminHome() {
-  const t = useTheme();
-  const d = adminDay;
+  const p = d.payments;
   return (
-    <Screen title={d.title}>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
-        <Stat label="ילדים נוכחים" value={`${d.attendance.present} מתוך ${d.attendance.total}`} />
-        <Stat label="צוות נוכח" value={`${d.staffPresent.present} מתוך ${d.staffPresent.total}`} />
-        <Stat label="הודעות ממתינות" value={String(d.pendingMessages)} />
+    <Screen>
+      <View>
+        <Txt size={13} color={theme.muted}>יום שלישי · 14:40</Txt>
+        <Txt accessibilityRole="header" w={700} size={25}>{d.title}</Txt>
       </View>
 
-      <SectionTitle>תשלומים החודש</SectionTitle>
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <View style={{ flex: 1.4, flexDirection: 'row' }}>
+          <Tile bg={theme.cobalt} fg="#fff" label="ילדים נוכחים" value={String(d.present)} unit={`מתוך ${d.total}`} foot="2 נעדרים בדיווח הורים" />
+        </View>
+        <Tile bg={theme.mint} fg="#06361f" label="צוות" value={String(d.staff.present)} unit={`/ ${d.staff.total}`} />
+        <Tile bg={theme.sun} fg={theme.sunInk} label="הודעות" value={String(d.pendingMessages)} foot="ממתינות" />
+      </View>
+
       <Card>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-          <Chip label={`שולם · ${d.payments.paid}`} />
-          <Chip label={`ממתין · ${d.payments.pending}`} tone="warn" />
-          <Chip label={`באיחור · ${d.payments.late}`} tone="danger" />
+        <CardTitle note="לפי ילד">עדכונים אחרונים</CardTitle>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', rowGap: 10 }}>
+          {d.coverage.map(([name, st]) => (
+            <View key={name} style={{ width: '20%', alignItems: 'center', gap: 3 }}>
+              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: AVATAR[st], alignItems: 'center', justifyContent: 'center' }}>
+                <Txt w={700} size={15} color={st === 'x' ? '#8a95b3' : '#10224a'}>{name[0]}</Txt>
+              </View>
+              <Txt w={600} size={11.5}>{name}</Txt>
+            </View>
+          ))}
+        </View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+          <Badge label="עודכן בשעה האחרונה" tone="ok" />
+          <Badge label="יותר משעתיים" tone="warn" />
+          <Badge label="נעדר" tone="mute" />
         </View>
       </Card>
 
-      <SectionTitle>לטיפול</SectionTitle>
       <Card>
-        {d.todo.map((line) => (
-          <Text key={line} style={{ color: t.ink, fontSize: 16, textAlign: 'right', minHeight: 32 }}>
-            • {line}
-          </Text>
+        <CardTitle note="10 משפחות">{`תשלומים · ${p.month}`}</CardTitle>
+        <View accessibilityLabel="6 שולמו, 3 ממתינים, 1 באיחור" style={{ flexDirection: 'row', height: 14, borderRadius: 7, overflow: 'hidden', gap: 2 }}>
+          <View style={{ flex: p.paid.n, backgroundColor: theme.mint }} />
+          <View style={{ flex: p.pending.n, backgroundColor: theme.sun }} />
+          <View style={{ flex: p.late.n, backgroundColor: theme.coral }} />
+        </View>
+        <View style={{ flexDirection: 'row', gap: 8, marginTop: 4 }}>
+          <Pay n={p.paid.n} label="שולם" sum={p.paid.sum} bg="#d3f5e5" fg="#0a6a43" />
+          <Pay n={p.pending.n} label="ממתין" sum={p.pending.sum} bg="#ffe8b8" fg="#6b4300" />
+          <Pay n={p.late.n} label="באיחור" sum={p.late.sum} bg="#ffd9d4" fg="#8f1d12" />
+        </View>
+      </Card>
+
+      <Card>
+        <CardTitle>לטיפול</CardTitle>
+        {d.todo.map((t) => (
+          <View key={t.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 }}>
+            <Disc icon={t.icon} color={t.color} />
+            <View style={{ flex: 1 }}>
+              <Txt w={600} size={14}>{t.title}</Txt>
+              <Txt size={13} color={theme.muted}>{t.sub}</Txt>
+            </View>
+            <Badge label={t.tag} tone={t.tone} />
+          </View>
         ))}
       </Card>
 
-      <SectionTitle>בקרוב</SectionTitle>
       <Card>
-        {d.upcoming.map((line) => (
-          <Text key={line} style={{ color: t.ink, fontSize: 16, textAlign: 'right', minHeight: 32 }}>
-            • {line}
-          </Text>
+        <CardTitle>בקרוב</CardTitle>
+        {d.upcoming.map((u) => (
+          <View key={u.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 }}>
+            <View style={{ backgroundColor: '#e8ecf8', borderRadius: 10, paddingHorizontal: 8, paddingVertical: 4, alignItems: 'center', minWidth: 46 }}>
+              <Txt w={700} size={11} color="#4d5b7c">{u.month}</Txt>
+              <Txt w={700} size={17}>{u.day}</Txt>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Txt w={600} size={14}>{u.title}</Txt>
+              <Txt size={13} color={theme.muted}>{u.sub}</Txt>
+            </View>
+            <Badge label={u.tag} tone={u.tone} />
+          </View>
         ))}
       </Card>
     </Screen>

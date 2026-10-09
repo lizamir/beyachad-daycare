@@ -1,3 +1,5 @@
+import { Rubik_400Regular, Rubik_500Medium, Rubik_600SemiBold, Rubik_700Bold } from '@expo-google-fonts/rubik';
+import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
@@ -11,7 +13,8 @@ setupRtl();
 function Routes() {
   const { status, role } = useSession();
   const t = useTheme();
-  if (status === 'loading') {
+  const [fontsLoaded] = useFonts({ Rubik_400Regular, Rubik_500Medium, Rubik_600SemiBold, Rubik_700Bold });
+  if (status === 'loading' || !fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', backgroundColor: t.ground }}>
         <ActivityIndicator color={t.accent} />
@@ -44,7 +47,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <SessionProvider>
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
         <Routes />
       </SessionProvider>
     </SafeAreaProvider>
