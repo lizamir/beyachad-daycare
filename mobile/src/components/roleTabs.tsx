@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { Pressable, Text } from 'react-native';
 import { useSession } from '../session';
 import { useTheme } from '../theme';
@@ -46,14 +46,7 @@ export function MoreScreen({ items }: { items: string[] }) {
           </Pressable>
         ))}
       </Card>
-      <Chip
-        label="התנתקות"
-        tone="warn"
-        onPress={() => {
-          signOut();
-          router.replace('/');
-        }}
-      />
+      <Chip label="התנתקות" tone="warn" onPress={signOut} />
     </Screen>
   );
 }

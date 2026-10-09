@@ -27,6 +27,14 @@ python -m http.server 5173 --bind 127.0.0.1
 
 אפליקציה ל־Android ול־iPhone, בעברית ובכיווניות מימין לשמאל. מתחילים במשפחתון; בעתיד ניתן להרחיב למעון ולגנים. הטכנולוגיה שנבחרה: Expo (React Native) עם TypeScript, ושרת Supabase (דוא״ל וסיסמה, הרשאות RLS). קובצי ה־HTML בשורש הם להמחשה בלבד.
 
+## חיבור Supabase
+
+1. ליצור פרויקט ב־[supabase.com](https://supabase.com) (אזור קרוב, למשל Frankfurt).
+2. ב־SQL Editor להריץ את [supabase/migrations/20261009000000_core.sql](supabase/migrations/20261009000000_core.sql).
+3. ב־Authentication ← Providers ← Email: בזמן פיתוח לכבות את "Confirm email".
+4. להעתיק `mobile/.env.example` ל־`mobile/.env` ולמלא URL ומפתח **anon** (Project Settings ← API). אין להעלות את `.env` לגיט ואין להשתמש במפתח service_role באפליקציה.
+5. להפעיל מחדש את השרת המקומי. בלי `.env` האפליקציה רצה במצב הדגמה.
+
 ## האפליקציה (`mobile/`)
 
 שלד Expo Router עם שלושה אזורים לפי תפקיד ונתוני דמו. אין עדיין חיבור לשרת.

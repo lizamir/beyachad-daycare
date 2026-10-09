@@ -1,25 +1,39 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { setupRtl } from '../src/rtl';
 import { SessionProvider, useSession } from '../src/session';
+import { useTheme } from '../src/theme';
 
 setupRtl();
 
 function Routes() {
-  const { role } = useSession();
+  const { status, role } = useSession();
+  const t = useTheme();
+  if (status === 'loading') {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', backgroundColor: t.ground }}>
+        <ActivityIndicator color={t.accent} />
+      </View>
+    );
+  }
+  const ready = status === 'ready';
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!role}>
+      <Stack.Protected guard={status === 'out'}>
         <Stack.Screen name="index" />
       </Stack.Protected>
-      <Stack.Protected guard={role === 'parent'}>
+      <Stack.Protected guard={status === 'needsSetup'}>
+        <Stack.Screen name="setup" />
+      </Stack.Protected>
+      <Stack.Protected guard={ready && role === 'parent'}>
         <Stack.Screen name="(parent)" />
       </Stack.Protected>
-      <Stack.Protected guard={role === 'staff'}>
+      <Stack.Protected guard={ready && role === 'staff'}>
         <Stack.Screen name="(staff)" />
       </Stack.Protected>
-      <Stack.Protected guard={role === 'admin'}>
+      <Stack.Protected guard={ready && role === 'admin'}>
         <Stack.Screen name="(admin)" />
       </Stack.Protected>
     </Stack>
