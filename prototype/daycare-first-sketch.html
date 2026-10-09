@@ -1,0 +1,70 @@
+<div id="daycare-sketch" dir="rtl" class="viz-dotted-background">
+  <div class="device" aria-label="סקיצת אפליקציה למשפחתון">
+    <div class="demo">סקיצה ראשונית · נתונים לדוגמה</div>
+    <header><span class="brand">ביחד 🌱</span><span>המשפחתון של מיכל</span></header>
+    <div class="roles" aria-label="תצוגת תפקיד"><button data-role="parent" aria-pressed="true">הורים</button><button data-role="staff" aria-pressed="false">צוות</button><button data-role="manager" aria-pressed="false">מנהלת</button></div>
+    <main aria-live="polite"></main>
+    <nav aria-label="מסכי האפליקציה"><button data-page="home">היום</button><button data-page="photos">אלבומים</button><button data-page="messages">הודעות</button><button data-page="payments">תשלומים</button></nav>
+  </div>
+</div>
+<style>
+#daycare-sketch{padding:20px 10px;font-family:Arial,sans-serif;color-scheme:light dark}
+#daycare-sketch .device{--ink:light-dark(#253c3b,#edf5f2);--surface:light-dark(#fff,#1c2928);--ground:light-dark(#f3f7f4,#14201f);--soft:light-dark(#e5f1eb,#2d4940);--accent:light-dark(#276a53,#a3d5bc);--line:light-dark(#dce6df,#3e5550);max-width:410px;margin:auto;border:1px solid var(--line);border-radius:28px;overflow:hidden;background:var(--ground);color:var(--ink);box-shadow:0 12px 36px #00000015;font-size:15px;line-height:1.6}
+#daycare-sketch .demo{text-align:center;background:var(--soft);padding:6px;font-size:12px}
+#daycare-sketch header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:20px;background:var(--surface);font-size:12px}
+#daycare-sketch .brand{font-size:23px;font-weight:600}
+#daycare-sketch button{font:inherit;color:inherit;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);min-height:44px}
+#daycare-sketch button[aria-pressed=true]{background:var(--soft);color:var(--accent);border-color:var(--accent)}
+#daycare-sketch .roles{display:flex;gap:7px;padding:14px 18px}
+#daycare-sketch .roles button{flex:1}
+#daycare-sketch main{padding:0 20px 20px;min-height:430px}
+#daycare-sketch h2{font-size:23px;margin:10px 0 2px;font-weight:600}
+#daycare-sketch h3{font-size:16px;margin:0 0 6px;font-weight:600}
+#daycare-sketch p{margin:5px 0 12px}
+#daycare-sketch .sub{font-size:13px;opacity:.8}
+#daycare-sketch .panel{background:var(--surface);border:1px solid var(--line);padding:15px;border-radius:16px;margin-top:12px}
+#daycare-sketch .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+#daycare-sketch .row:last-child{border:0}
+#daycare-sketch .pill{font-size:12px;padding:4px 9px;border-radius:8px;background:var(--soft);white-space:nowrap}
+#daycare-sketch .primary{background:var(--accent);color:var(--surface);width:100%;margin-top:8px;border:0}
+#daycare-sketch .art{height:150px;display:grid;place-content:center;background:var(--soft);border-radius:12px;font-size:36px;text-align:center}
+#daycare-sketch .art small{font-size:13px}
+#daycare-sketch nav{display:flex;gap:4px;padding:10px;background:var(--surface);border-top:1px solid var(--line)}
+#daycare-sketch nav button{flex:1;padding:8px 2px;font-size:13px;border:0;border-radius:9px}
+#daycare-sketch .actions{display:flex;gap:8px;flex-wrap:wrap}
+#daycare-sketch .actions button{flex:1}
+#daycare-sketch .amount{font-size:26px;font-weight:600}
+</style>
+<script>
+(() => {
+ const root=document.getElementById('daycare-sketch'), main=root.querySelector('main');
+ const state={role:'parent',page:'home',added:false,tagged:true,meal:false,paid:false,read:false};
+ const initial=window.openai?.widgetState?.privateContent;
+ if(initial&&['parent','staff','manager'].includes(initial.role))Object.assign(state,initial);
+ function save(){window.openai?.setWidgetState({modelContent:{role:state.role,page:state.page,photoAdded:state.added},privateContent:state})?.catch(()=>{});}
+ function render(){
+ root.querySelectorAll('[data-role]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.role===state.role)));
+ root.querySelectorAll('[data-page]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.page===state.page)));
+ const isParent=state.role==='parent',isManager=state.role==='manager';
+ if(state.page==='home') main.innerHTML=isParent?`<h2>היום של נועה ☀️</h2><p class="sub">יום במשפחתון · מעודכן ל־13:30</p><div class="panel"><span class="pill">נוכחת במשפחתון</span><div class="row"><span>🍽️ ארוחת בוקר<br><small>09:00 · אכלה כמעט הכול</small></span></div><div class="row"><span>😴 שנת צהריים<br><small>12:15–13:30 · שעה ורבע</small></span></div><div class="row"><span>🧸 פעילות<br><small>משחקי תחושה ויצירה</small></span></div></div><div class="panel"><h3>רגעים קטנים מהיום</h3><p>תמונה חדשה באלבום הקבוצתי</p><button class="primary" data-go="photos">לצפייה בתמונה</button></div>`:`<h2>${isManager?'המשפחתון היום':'היום בקבוצה'} 🌱</h2><p class="sub">10 ילדים רשומים · 8 נוכחים</p><div class="panel"><h3>עדכון מהיר</h3><p class="sub">בחירת ילד: נועה לוי</p><div class="actions"><button data-action="meal">${state.meal?'✓ ארוחה עודכנה':'עדכון ארוחה'}</button><button data-go="photos">תמונות</button></div></div><div class="panel"><div class="row"><span>נועה לוי</span><span class="pill">${state.meal?'אכלה צהריים':'התעוררה · 13:30'}</span></div><div class="row"><span>איתי כהן</span><span class="pill">ישן כעת</span></div><div class="row"><span>מאיה רון</span><span class="pill">אכלה צהריים</span></div></div>${isManager?'<button class="primary" data-go="payments">למעקב תשלומים</button>':'<p class="sub">גישה לעדכוני טיפול בלבד, ללא נתונים כספיים</p>'}`;
+ if(state.page==='photos')main.innerHTML=`<h2>האלבומים שלנו</h2><p class="sub">קבוצתי · האלבום של נועה (${state.added?1:0})</p><div class="panel"><div class="art" role="img" aria-label="מציין מקום לתמונת פעילות">🌿 🧸 🎨<small>תמונת פעילות לדוגמה</small></div><h3 style="margin-top:12px">יצירה במשפחתון</h3><p class="sub">אלבום קבוצתי · הועלה על ידי הצוות</p><span class="pill">${state.tagged?'הצעת תיוג: נועה':'טרם תויגה'}</span>${isParent?`<p>להוסיף גם לאלבום הפרטי של נועה?</p><button class="primary" data-action="add">${state.added?'✓ נוסף לאלבום הפרטי · ביטול':'אישור והוספה לאלבום הפרטי'}</button><button style="width:100%;margin-top:8px" data-action="tag">${state.tagged?'זו לא נועה · הסרת התיוג':'תיוג ידני: זו נועה'}</button>`:'<p class="sub">ההורים בוחרים אם לשמור באלבום הפרטי.</p>'}</div><p class="sub">התיוג בסקיצה מדגים את התהליך בלבד.</p>`;
+ if(state.page==='payments')main.innerHTML=state.role==='staff'?'<h2>תשלומים</h2><div class="panel">המידע הכספי זמין למנהלת ולהורים המורשים בלבד.</div>':`<h2>${isManager?'מעקב תשלומים':'התשלומים שלי'}</h2><p class="sub">משפחת נועה לוי · חודש לדוגמה</p><div class="panel"><h3>תשלום חודשי</h3><div class="amount">₪3,200</div><div class="row"><span>מצב</span><span class="pill">${state.paid?'שולם':'ממתין לתשלום'}</span></div><p class="sub">תשלום מחוץ לאפליקציה · ללא סליקה</p>${isManager?`<button class="primary" data-action="paid">${state.paid?'ביטול סימון תשלום':'סימון תשלום שהתקבל'}</button>`:''}<button style="width:100%;margin-top:8px" data-action="invoice">${isManager?'הפקת מסמך':'צפייה במסמך'}</button><p class="sub" id="invoice-status">חשבוניות וקבלות יוצגו כאן לאחר חיבור לשירות הפקה.</p></div>`;
+ if(state.page==='messages')main.innerHTML=`<h2>הודעות המשפחתון</h2><p class="sub">עדכונים לכל המשפחות</p><div class="panel"><h3>ציוד למחר 🎒</h3><p>נא להביא בגדים להחלפה ובקבוק מים מסומן.</p><p class="sub">מיכל · מנהלת המשפחתון</p><button class="primary" data-action="read">${state.read?'✓ הקריאה אושרה':'אישור קריאה'}</button></div><div class="panel"><h3>חופשות ואירועים</h3><p>לוח המשפחתון יוצג כאן.</p></div>`;
+ }
+ root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.role){state.role=b.dataset.role;state.page='home';}
+ if(b.dataset.page)state.page=b.dataset.page;
+ if(b.dataset.go)state.page=b.dataset.go;
+ const a=b.dataset.action;
+ if(a==='add')state.added=!state.added;
+ if(a==='tag'){state.tagged=!state.tagged;if(!state.tagged)state.added=false;}
+ if(a==='meal')state.meal=!state.meal;
+ if(a==='paid')state.paid=!state.paid;
+ if(a==='read')state.read=!state.read;
+ render();save();
+ if(a==='invoice')root.querySelector('#invoice-status').textContent='הדגמה בלבד: המסמך יופק באמצעות שירות חשבוניות מחובר. לא הופק מסמך כספי.';
+ });
+ window.addEventListener('openai:set_globals',e=>{const s=e.detail?.globals?.widgetState?.privateContent;if(s){Object.assign(state,s);render();}});
+ render();
+})();
+</script>
