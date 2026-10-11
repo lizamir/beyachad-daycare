@@ -16,7 +16,7 @@ export function RoleTabs({ tabs }: { tabs: TabDef[] }) {
         headerShown: false,
         tabBarActiveTintColor: t.accent,
         tabBarInactiveTintColor: t.muted,
-        tabBarStyle: { backgroundColor: t.surface, borderTopColor: t.line },
+        tabBarStyle: { backgroundColor: t.surface, borderTopColor: t.line, height: 64, paddingTop: 6 },
         tabBarLabelStyle: { fontSize: 11, fontFamily: 'Rubik_600SemiBold' },
       }}
     >

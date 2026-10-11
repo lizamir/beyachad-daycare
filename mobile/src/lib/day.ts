@@ -22,4 +22,5 @@ export type DayEvent = {
   end?: string; // בלי שעת סיום = נקודה (למשל החלפת חיתול)
   title: string;
   detail: string;
+  amount?: number; // לארוחה: כמה אכל, 0 עד 1 (לצלחת המתמלאת)
 };

@@ -1,39 +1,28 @@
 import { useState } from 'react';
-import { Txt } from '../src/components/Txt';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ErrorText, Field } from '../src/components/form';
-import { Card, Chip, Screen } from '../src/components/ui';
+import { Logo } from '../src/components/Logo';
+import { Squiggles } from '../src/components/Squiggles';
+import { Txt } from '../src/components/Txt';
+import { Btn, Card, Chip } from '../src/components/ui';
 import { useSession, type Role } from '../src/session';
-import { useTheme } from '../src/theme';
+import { theme } from '../src/theme';
 
 const demoRoles: { role: Role; label: string }[] = [
-  { role: 'parent', label: 'כניסה כהורה' },
-  { role: 'staff', label: 'כניסה כצוות' },
-  { role: 'admin', label: 'כניסה כמנהלת' },
+  { role: 'parent', label: 'הורה' },
+  { role: 'staff', label: 'צוות' },
+  { role: 'admin', label: 'מנהלת' },
 ];
 
 export default function Welcome() {
-  const t = useTheme();
+  const insets = useSafeAreaInsets();
   const { demo, signInDemo, signIn, signUp } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'in' | 'up'>('in');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  if (demo) {
-    return (
-      <Screen title="ביחד" subtitle="ניהול משפחתון, הורים וצוות">
-        <Card>
-          <Txt size={16}>
-            מצב הדגמה: השרת עדיין לא מחובר (חסרות הגדרות Supabase). בחרו תפקיד כדי לראות את המסכים.
-          </Txt>
-        </Card>
-        {demoRoles.map(({ role, label }) => (
-          <Chip key={role} label={label} onPress={() => signInDemo(role)} />
-        ))}
-      </Screen>
-    );
-  }
 
   const submit = async () => {
     if (!email.trim() || !password) {
@@ -48,35 +37,56 @@ export default function Welcome() {
   };
 
   return (
-    <Screen title="ביחד" subtitle={mode === 'in' ? 'התחברות' : 'יצירת חשבון'}>
-      <Card>
-        <Field
-          label="דוא״ל"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          autoComplete="email"
-          keyboardType="email-address"
-        />
-        <Field
-          label="סיסמה"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoComplete={mode === 'in' ? 'current-password' : 'new-password'}
-          onSubmitEditing={submit}
-        />
-        <ErrorText>{error}</ErrorText>
-      </Card>
-      <Chip label={busy ? 'רגע…' : mode === 'in' ? 'התחברות' : 'יצירת חשבון'} onPress={busy ? undefined : submit} />
-      <Chip
-        label={mode === 'in' ? 'אין לי חשבון עדיין' : 'כבר יש לי חשבון'}
-        tone="warn"
-        onPress={() => {
-          setMode(mode === 'in' ? 'up' : 'in');
-          setError(null);
-        }}
-      />
-    </Screen>
+    <View style={{ flex: 1, backgroundColor: theme.ground }}>
+      <Squiggles />
+      <View style={{ flex: 1, justifyContent: 'center', padding: 20, paddingTop: insets.top + 20, gap: 16, maxWidth: 460, width: '100%', alignSelf: 'center' }}>
+        <View style={{ alignItems: 'center', marginBottom: 8 }}>
+          <Logo size={64} tagline="הגן שלי, כל היום" />
+        </View>
+
+        {!demo && (
+          <>
+            <Card>
+              <Txt w={700} size={18}>{mode === 'in' ? 'התחברות' : 'יצירת חשבון'}</Txt>
+              <Field label="דוא״ל" value={email} onChangeText={setEmail} autoCapitalize="none" autoComplete="email" keyboardType="email-address" />
+              <Field
+                label="סיסמה"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoComplete={mode === 'in' ? 'current-password' : 'new-password'}
+                onSubmitEditing={submit}
+              />
+              <ErrorText>{error}</ErrorText>
+            </Card>
+            <Chip label={busy ? 'רגע…' : mode === 'in' ? 'כניסה' : 'יצירת חשבון'} onPress={busy ? undefined : submit} />
+            <Btn
+              tone="ghost"
+              label={mode === 'in' ? 'אין לי חשבון עדיין' : 'כבר יש לי חשבון'}
+              onPress={() => {
+                setMode(mode === 'in' ? 'up' : 'in');
+                setError(null);
+              }}
+            />
+          </>
+        )}
+
+        {/* תצוגת דמו: תמיד כשאין שרת, ובזמן פיתוח גם כשיש */}
+        {(demo || __DEV__) && (
+          <Card style={{ backgroundColor: '#f4f7ff' }}>
+            <Txt w={600} size={13} color={theme.muted}>
+              {demo ? 'מצב הדגמה: השרת עוד לא מחובר. בחרו תפקיד:' : 'תצוגת דמו (בפיתוח בלבד), בלי חשבון:'}
+            </Txt>
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              {demoRoles.map(({ role, label }, i) => (
+                <View key={role} style={{ flex: 1 }}>
+                  <Btn label={label} tone={i === 0 ? 'primary' : 'soft'} onPress={() => signInDemo(role)} />
+                </View>
+              ))}
+            </View>
+          </Card>
+        )}
+      </View>
+    </View>
   );
 }

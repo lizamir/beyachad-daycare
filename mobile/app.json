@@ -1,24 +1,24 @@
 {
   "expo": {
-    "name": "ביחד",
-    "slug": "beyachad",
+    "name": "גנלי",
+    "slug": "ganli",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "il.co.beyachad.app"
+      "bundleIdentifier": "il.co.ganli.app"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#e6edff",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "il.co.beyachad.app"
+      "package": "il.co.ganli.app"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -30,6 +30,6 @@
       "expo-status-bar",
       "expo-font"
     ],
-    "scheme": "beyachad"
+    "scheme": "ganli"
   }
 }

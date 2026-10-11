@@ -10,13 +10,22 @@ export const parentDay = {
   lastPhoto: { scene: 'a' as const, caption: 'נועה בארגז חול', time: '13:52' },
   morePhotos: 6,
   events: [
-    { id: 'e1', kind: 'meal', start: '09:00', end: '09:25', title: 'ארוחת בוקר', detail: 'אכלה כמעט הכול' },
+    { id: 'e1', kind: 'meal', start: '09:00', end: '09:25', title: 'ארוחת בוקר', detail: 'אכלה כמעט הכול', amount: 0.9 },
     { id: 'e2', kind: 'care', start: '10:30', title: 'החלפת חיתול', detail: 'ללא הערות' },
-    { id: 'e3', kind: 'meal', start: '11:50', end: '12:10', title: 'ארוחת צהריים', detail: 'אכלה חצי מהמנה' },
+    { id: 'e3', kind: 'meal', start: '11:50', end: '12:10', title: 'ארוחת צהריים', detail: 'אכלה חצי מהמנה', amount: 0.5 },
     { id: 'e4', kind: 'sleep', start: '12:15', end: '13:30', title: 'שנת צהריים', detail: 'שעה ורבע' },
   ] as DayEvent[],
   pending: { title: 'ארוחת ארבע ופעילות', detail: 'טרם עודכן' },
   notice: 'מחר להביא בגדים להחלפה',
+  status: 'ערה ומשחקת',
+  sleepingLabel: 'נועה ישנה עכשיו. שקט, שקט…',
+  birthday: { title: 'נועה בת שנה היום!', candles: 1, plan: 'בעשר וחצי חוגגים בגן עם כתר, שירים ועוגת בננה' },
+  milestone: { icon: 'footsteps-outline' as const, title: 'שלושה צעדים לבד!', by: 'מירב, 11:05', note: 'נועה הלכה מהשטיח עד הספה, וצחקה כל הדרך.' },
+  stickers: [
+    { day: 'א׳', label: 'יום של צחוקים', icon: 'happy-outline' as const, color: '#ff7a6b' },
+    { day: 'ב׳', label: 'ציירה קשת', icon: 'color-palette-outline' as const, color: '#a89cf0' },
+    { day: 'ג׳', label: 'תגיע ב־16:00', icon: 'star' as const, color: '#ffc23d', pending: true },
+  ],
 };
 
 export type KidEvents = { meals: [string, string][]; sleeps: [string, string][]; care: string[] };
@@ -28,15 +37,15 @@ export const staffGroup = {
     { id: 'a2', level: 'warn' as const, icon: 'swap-horizontal' as const, lead: 'שינוי באיסוף:', text: 'מיה תיאסף היום על ידי סבתא רחל' },
   ],
   kids: [
-    { id: 'k1', name: 'נועה', arrival: '08:10', meals: [['09:00', '09:25'], ['11:50', '12:10']], sleeps: [['12:15', '13:30']], care: ['10:30'], last: 'פעילות · 13:52' },
+    { id: 'k1', name: 'נועה', arrival: '08:10', meals: [['09:00', '09:25'], ['11:50', '12:10']], sleeps: [['12:15', '13:30']], care: ['10:30'], last: 'פעילות · 13:52', flag: { tone: 'pink' as const, text: 'יום הולדת' } },
     { id: 'k2', name: 'יובל', arrival: '08:30', meals: [['09:05', '09:30'], ['11:50', '12:10']], sleeps: [['12:20', '13:40']], care: ['11:00', '13:45'], last: 'חיתול · 13:45', flag: { tone: 'bad' as const, text: 'אלרגיה' } },
     { id: 'k3', name: 'מיה', arrival: '07:55', meals: [['09:00', '09:20']], sleeps: [['12:10', '13:15']], care: ['10:15'], last: 'קמה משינה · 13:15', flag: { tone: 'warn' as const, text: 'שינוי באיסוף' } },
-    { id: 'k4', name: 'איתי', arrival: '09:10', meals: [['09:30', '09:50']], sleeps: [], care: [], last: 'ארוחת בוקר · 09:50', flag: { tone: 'warn' as const, text: 'אין עדכון 5 שעות' } },
+    { id: 'k4', name: 'איתי', arrival: '09:10', meals: [['09:30', '09:50']], sleeps: [], care: [], last: 'ארוחת בוקר · 09:50', flag: { tone: 'warn' as const, text: 'אין עדכון 5 שעות', stale: true } },
     { id: 'k5', name: 'אורי', arrival: '08:00', meals: [['09:00', '09:20'], ['11:55', '12:15']], sleeps: [['12:30', '14:00']], care: ['10:20'], last: 'קם משינה · 14:00' },
     { id: 'k6', name: 'תמר', arrival: '08:45', meals: [['09:10', '09:35'], ['11:50', '12:05']], sleeps: [['12:15', '13:20']], care: ['10:40', '13:30'], last: 'שירותים · 13:30' },
-    { id: 'k7', name: 'אדם', arrival: '08:20', meals: [['09:00', '09:15']], sleeps: [['12:20', '13:25']], care: ['10:50'], last: 'ארוחת צהריים · 12:00' },
+    { id: 'k7', name: 'אדם', arrival: '08:20', meals: [['09:00', '09:15']], sleeps: [['12:20', '13:25']], care: ['10:50'], last: 'ארוחת צהריים · 12:00', flag: { tone: 'warn' as const, text: 'אין עדכון שעתיים', stale: true } },
     { id: 'k8', name: 'ליה', arrival: '08:35', meals: [['09:05', '09:30'], ['11:50', '12:10']], sleeps: [['12:15', '13:35']], care: ['10:25', '13:50'], last: 'חיתול · 13:50' },
-  ] as (KidEvents & { id: string; name: string; arrival: string; last: string; flag?: { tone: 'bad' | 'warn'; text: string } })[],
+  ] as (KidEvents & { id: string; name: string; arrival: string; last: string; flag?: { tone: 'bad' | 'warn' | 'pink'; text: string; stale?: boolean } })[],
   absent: [
     { id: 'k9', name: 'שירה', note: 'ההורה דיווח היעדרות' },
     { id: 'k10', name: 'דניאל', note: 'ההורה דיווח היעדרות' },
@@ -67,6 +76,7 @@ export const adminDay = {
     { id: 't3', icon: 'warning-outline' as const, color: '#4a42c7', title: 'הנחיית אלרגיה חדשה', sub: 'יובל · ממתינה לאישור צוות', tag: 'בדיקה', tone: 'cool' as const },
   ],
   upcoming: [
+    { id: 'u0', month: 'אוק׳', day: '11', title: 'יום ההולדת של נועה', sub: 'בת שנה · חוגגים ב־10:30', tag: 'יום הולדת', tone: 'pink' as const },
     { id: 'u1', month: 'אוק׳', day: '20', title: 'המשפחתון סגור', sub: 'חג', tag: 'חופשה', tone: 'mute' as const },
     { id: 'u2', month: 'דצמ׳', day: '14', title: 'מסיבת חנוכה', sub: '14:00 עם ההורים', tag: 'אירוע', tone: 'cool' as const },
   ],

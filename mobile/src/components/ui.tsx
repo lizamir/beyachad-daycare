@@ -111,7 +111,7 @@ export function Placeholder({ title, note }: { title: string; note: string }) {
 }
 
 const s = StyleSheet.create({
-  card: { backgroundColor: theme.surface, borderRadius: radius.card, padding: 14, gap: space.sm },
+  card: { backgroundColor: theme.surface, borderRadius: radius.card, padding: 16, gap: space.sm, boxShadow: theme.shadow },
   cardTitle: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
   badge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 11, paddingVertical: 5, borderRadius: radius.chip, alignSelf: 'flex-start' },
   dot: { width: 8, height: 8, borderRadius: 4 },

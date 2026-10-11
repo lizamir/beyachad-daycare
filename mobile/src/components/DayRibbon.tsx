@@ -1,4 +1,7 @@
-import { Pressable, View, type DimensionValue, type ViewStyle } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef } from 'react';
+import { Animated, Pressable, View, type DimensionValue, type ViewStyle } from 'react-native';
+import { ND, useReducedMotion } from '../lib/motion';
 import { E, MS, S } from '../lib/dir';
 import { NOW, pct, span, toMin, type DayEvent } from '../lib/day';
 import { theme } from '../theme';
@@ -57,6 +60,38 @@ function Hit({
   );
 }
 
+// עקבות קטנות שהולכות על נתיב הנוכחות, מההגעה ועד עכשיו
+function Footprints({ arrival }: { arrival: string }) {
+  const reduced = useReducedMotion();
+  const steps = 5;
+  const from = parseFloat(pct(toMin(arrival)));
+  const vals = useRef(Array.from({ length: steps }, () => new Animated.Value(reduced ? 1 : 0))).current;
+  useEffect(() => {
+    if (reduced) return;
+    Animated.stagger(220, vals.map((v) => Animated.timing(v, { toValue: 1, duration: 260, useNativeDriver: ND }))).start();
+  }, [reduced, vals]);
+  return (
+    <>
+      {vals.map((v, i) => {
+        const at = from + ((nowPct - from) * (i + 0.6)) / steps;
+        return (
+          <Animated.View
+            key={i}
+            pointerEvents="none"
+            style={{
+              position: 'absolute', top: i % 2 ? 3 : 7, ...S(asPct(at)), zIndex: 2,
+              opacity: v.interpolate({ inputRange: [0, 1], outputRange: [0, 0.75] }),
+              transform: [{ scale: v.interpolate({ inputRange: [0, 1], outputRange: [0.4, 1] }) }, { rotate: '-90deg' }],
+            }}
+          >
+            <Ionicons name="footsteps" size={11} color="#fff" />
+          </Animated.View>
+        );
+      })}
+    </>
+  );
+}
+
 // הפס המלא: ארבעה נתיבים (נוכחות, אוכל, שינה, טיפול) וקו "עכשיו"
 export function DayRibbon({
   arrival,
@@ -88,6 +123,7 @@ export function DayRibbon({
                     style={{ ...S(pct(toMin(arrival))), width: span(arrival, NOW), backgroundColor: '#9db6f7' }}
                   />
                 )}
+                {lane.kind === 'presence' && <Footprints arrival={arrival} />}
                 {events
                   .filter((e) => e.kind === lane.kind)
                   .map((e) => (

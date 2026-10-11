@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { Logo } from '../../src/components/Logo';
 import { Txt } from '../../src/components/Txt';
 import { Badge, Card, CardTitle, Disc, Screen } from '../../src/components/ui';
 import { adminDay as d } from '../../src/data/demo';
@@ -8,7 +9,7 @@ const AVATAR = { g: '#9be8c4', y: '#ffd978', x: '#dfe4f0' } as const;
 
 function Tile({ bg, fg, label, value, unit, foot }: { bg: string; fg: string; label: string; value: string; unit?: string; foot?: string }) {
   return (
-    <View style={{ flex: 1, minHeight: 104, borderRadius: 18, padding: 12, backgroundColor: bg, justifyContent: 'space-between' }}>
+    <View style={{ flex: 1, minHeight: 104, borderRadius: 22, padding: 12, backgroundColor: bg, justifyContent: 'space-between' }}>
       <Txt w={600} size={12} color={fg}>{label}</Txt>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4 }}>
         <Txt w={700} size={34} color={fg} style={{ lineHeight: 38 }}>{value}</Txt>
@@ -33,6 +34,7 @@ export default function AdminHome() {
   const p = d.payments;
   return (
     <Screen>
+      <Logo size={26} />
       <View>
         <Txt size={13} color={theme.muted}>יום שלישי · 14:40</Txt>
         <Txt accessibilityRole="header" w={700} size={25}>{d.title}</Txt>
@@ -42,7 +44,7 @@ export default function AdminHome() {
         <View style={{ flex: 1.4, flexDirection: 'row' }}>
           <Tile bg={theme.cobalt} fg="#fff" label="ילדים נוכחים" value={String(d.present)} unit={`מתוך ${d.total}`} foot="2 נעדרים בדיווח הורים" />
         </View>
-        <Tile bg={theme.mint} fg="#06361f" label="צוות" value={String(d.staff.present)} unit={`/ ${d.staff.total}`} />
+        <Tile bg={theme.coral} fg="#fff" label="צוות" value={String(d.staff.present)} unit={`/ ${d.staff.total}`} />
         <Tile bg={theme.sun} fg={theme.sunInk} label="הודעות" value={String(d.pendingMessages)} foot="ממתינות" />
       </View>
 
@@ -97,7 +99,7 @@ export default function AdminHome() {
         <CardTitle>בקרוב</CardTitle>
         {d.upcoming.map((u) => (
           <View key={u.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 }}>
-            <View style={{ backgroundColor: '#e8ecf8', borderRadius: 10, paddingHorizontal: 8, paddingVertical: 4, alignItems: 'center', minWidth: 46 }}>
+            <View style={{ backgroundColor: u.tone === 'pink' ? '#ffe0ec' : '#edf1fb', borderRadius: 12, paddingHorizontal: 8, paddingVertical: 4, alignItems: 'center', minWidth: 46 }}>
               <Txt w={700} size={11} color="#4d5b7c">{u.month}</Txt>
               <Txt w={700} size={17}>{u.day}</Txt>
             </View>
